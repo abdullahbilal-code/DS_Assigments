@@ -1,0 +1,56 @@
+---
+title: "Assignment"
+output: html_document
+---
+
+## R Markdown
+# Muhammad Abdullah Bilal 17F-8349
+# Humza Imran 17F-8075
+# Muhammad Madeh 17F-8169
+This is an R Markdown document.
+```{r}
+
+library(readxl)
+
+
+bigdata <- read_excel('D:\\7th Smester\\DATA SCIENCE\\ir211wk12sample.xls') 
+
+typeof(bigdata)
+
+```
+
+```{r}
+head(bigdata)
+```
+
+
+
+```{r}
+dim(bigdata)
+```
+
+```{r}
+#reading 4th column of DataSet items
+bigdata[,4]
+```
+
+
+```{r}
+bigdata[(bigdata$Units <=10  & bigdata$Total >200),]
+```
+
+
+```{r}
+bigdata[1:6, 'Total']
+
+```
+```{r}
+sort(bigdata$Total,decreasing = F)
+```
+```{r}
+
+
+library(plyr)
+arrange(bigdata,Item)
+```
+
