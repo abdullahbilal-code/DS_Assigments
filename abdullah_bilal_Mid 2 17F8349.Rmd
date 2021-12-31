@@ -1,0 +1,183 @@
+---
+title: "17F-8349_Mid 2"
+author: "Abdullah Bilal"
+date: "10/21/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+```{r}
+
+```
+
+```{r}
+getwd()
+```
+
+```{r}
+ig <-readRDS("D:/7th Smester/DATA SCIENCE/DS_Assigments/summarySCC_PM25.rds")
+print(ig)
+
+
+SCC<-readRDS("D:/7th Smester/DATA SCIENCE/DS_Assigments/Source_Classification_Code.rds")
+print(SCC)
+
+
+ig_sample <- ig[sample(nrow(ig), size = 1200, replace = F), ]
+
+Emissions <- aggregate(ig[, 'Emissions'], by = list(ig$year), FUN = sum)
+Emissions$PM <- round(Emissions[, 2] / 1000, 2)
+
+png(filename = "D:/7th Smester/DATA SCIENCE/DS_Assigments/TASK01.png")
+barplot(Emissions$PM, names.arg = Emissions$Group.1, main = expression('Total Emission of PM'[2.5]), xlab = 'Year', ylab = expression(paste('PM', ''[2.5], ' in Kilotons')))
+dev.off()
+```
+
+```{r}
+ig <-readRDS("D:/7th Smester/DATA SCIENCE/DS_Assigments/summarySCC_PM25.rds")
+print(ig)
+
+
+SCC<-readRDS("D:/7th Smester/DATA SCIENCE/DS_Assigments/Source_Classification_Code.rds")
+print(SCC)
+
+
+ig_sample <- ig[sample(nrow(ig), size = 5000, replace = F), ]
+
+ig_play <- subset(ig, fips == '24510')
+
+png(filename = 'D:/7th Smester/DATA SCIENCE/DS_Assigments/TASK02.png')
+barplot(tapply(X = ig_play$Emissions, INDEX = ig_play$year, FUN = sum), main = 'Total Emission in Baltimore City, ig_play', xlab = 'Year', ylab = expression('PM'[2.5]))
+dev.off()
+```
+
+```{r message=TRUE, warning=TRUE}
+library(ggplot2)
+
+ig <-readRDS("D:/7th Smester/DATA SCIENCE/DS_Assigments/summarySCC_PM25.rds")
+print(ig)
+
+
+SCC<-readRDS("D:/7th Smester/DATA SCIENCE/DS_Assigments/Source_Classification_Code.rds")
+print(SCC)
+
+# Baltimore City, Maryland == fips
+subset <- neiData[neiData$fips == "24510", ] 
+par("mar"=c(5.1, 4.5, 4.1, 2.1))
+
+# final results :)
+png(filename = "D:/7th Smester/DATA SCIENCE/DS_Assigments/TASK03.png", width = 460, height = 460, units = "px")
+g <- ggplot(subset, aes(year, Emissions, color = type))
+g + geom_line(stat = "summary", fun.y = "sum") + ylab(expression('Total PM'[2.5]*" Emissions")) + ggtitle("Total Emissions in Baltimore City from 1999 to 2008")
+dev.off()
+
+```
+
+
+
+```{r}
+#Question 4
+library(ggplot2)
+# Loading RDS
+ig <- readRDS("D:/7th Smester/DATA SCIENCE/DS_Assigments/summarySCC_PM25.rds")
+SCC <- readRDS("D:/7th Smester/DATA SCIENCE/DS_Assigments/Source_Classification_Code.rds")
+
+# Coal-related SCC
+SCC.coal = SCC[grepl("coal", SCC$Short.Name, ignore.case = TRUE), ]
+
+# Merges two data sets
+merge <- merge(x = ig, y = SCC.coal, by = 'SCC')
+merge.sum <- aggregate(merge[, 'Emissions'], by = list(merge$year), sum)
+colnames(merge.sum) <- c('Year', 'Emissions')
+
+png(filename = 'D:/7th Smester/DATA SCIENCE/DS_Assigments/plot4.png')
+ggplot(data = merge.sum, aes(x = Year, y = Emissions / 1000)) + geom_line(aes(group = 1, col = Emissions)) + geom_point(aes(size = 2, col = Emissions)) + ggtitle(expression('Total Emissions of PM'[2.5])) + ylab(expression(paste('PM', ''[2.5], ' in kilotons'))) + geom_text(aes(label = round(Emissions / 1000, digits = 2), size = 2, hjust = 1.5, vjust = 1.5)) + theme(legend.position = 'none') + scale_colour_gradient(low = 'black', high = 'red')
+dev.off()
+```
+
+
+```{r}
+#Question 05
+library(ggplot2)
+
+# Loading data
+NEI <- readRDS("D:/7th Smester/DATA SCIENCE/DS_Assigments/summarySCC_PM25.rds")
+NEI$year <- factor(NEI$year, levels = c('1999', '2002', '2005', '2008'))
+SCC <- readRDS("D:/7th Smester/DATA SCIENCE/DS_Assigments/Source_Classification_Code.rds")
+
+# Baltimore City, Maryland == fips
+MD.onroad <- subset(NEI, fips == 24510 & type == 'ON-ROAD')
+
+# Aggregation
+MD.df <- aggregate(MD.onroad[, 'Emissions'], by = list(MD.onroad$year), sum)
+colnames(MD.df) <- c('year', 'Emissions')
+
+# Final results :)
+png('D:/7th Smester/DATA SCIENCE/DS_Assigments/Task05.png')
+ggplot(data = MD.df, aes(x = year, y = Emissions)) + geom_bar(aes(fill = year), stat = "identity") + guides(fill = F) + ggtitle('Total Emissions of Motor Vehicle Sources in Baltimore City, Maryland') + ylab(expression('PM'[2.5])) + xlab('Year') + theme(legend.position = 'none') + geom_text(aes(label = round(Emissions, 0), size = 1, hjust = 0.5, vjust = 2))
+dev.off()
+```
+```{r}
+#Question 06 
+library(ggplot2)
+
+# Loading RDS
+NEI <- readRDS("D:/7th Smester/DATA SCIENCE/DS_Assigments/summarySCC_PM25.rds")
+NEI$year <- factor(NEI$year, levels = c('1999', '2002', '2005', '2008'))
+SCC <- readRDS("D:/7th Smester/DATA SCIENCE/DS_Assigments/Source_Classification_Code.rds")
+
+# Baltimore City, Maryland
+MD.onroad <- subset(NEI, fips == '24510' & type == 'ON-ROAD')
+# Los Angeles County, California
+CA.onroad <- subset(NEI, fips == '06037' & type == 'ON-ROAD')
+
+# Aggregation
+# Baltimore City, Maryland
+MD.DF <- aggregate(MD.onroad[, 'Emissions'], by = list(MD.onroad$year), sum)
+colnames(MD.DF) <- c('year', 'Emissions')
+MD.DF$City <- paste(rep('MD', 4))
+
+# Aggregation
+# Los Angeles County, California
+CA.DF <- aggregate(CA.onroad[, 'Emissions'], by = list(CA.onroad$year), sum)
+colnames(CA.DF) <- c('year', 'Emissions')
+CA.DF$City <- paste(rep('CA', 4))
+DF <- as.data.frame(rbind(MD.DF, CA.DF))
+
+# Final results :)
+png('D:/7th Smester/DATA SCIENCE/DS_Assigments/TASK06.png')
+ggplot(data = DF, aes(x = year, y = Emissions)) + geom_bar(aes(fill = year),stat = "identity") + guides(fill = F) + ggtitle('Total Emissions of Motor Vehicle Sources\nLos Angeles County, California vs. Baltimore City, Maryland') + ylab(expression('PM'[2.5])) + xlab('Year') + theme(legend.position = 'none') + facet_grid(. ~ City) + geom_text(aes(label = round(Emissions, 0), size = 1, hjust = 0.5, vjust = -1))
+dev.off()
+```
+
+
+```{r}
+#Question 03 
+
+# loading ggplot2
+library(ggplot2)
+
+# loading data
+neiData <- readRDS("D:/7th Smester/DATA SCIENCE/DS_Assigments/summarySCC_PM25.rds")
+sccData <- readRDS("D:/7th Smester/DATA SCIENCE/DS_Assigments/Source_Classification_Code.rds")
+
+# Baltimore City, Maryland == fips
+subset <- neiData[neiData$fips == "24510", ] 
+par("mar"=c(5.1, 4.5, 4.1, 2.1))
+
+# final results :)
+png(filename = "D:/7th Smester/DATA SCIENCE/DS_Assigments/plot3.png", width = 480, height = 480, units = "px")
+g <- ggplot(subset, aes(year, Emissions, color = type))
+g + geom_line(stat = "summary", fun.y = "sum") + ylab(expression('Total PM'[2.5]*" Emissions")) + ggtitle("Total Emissions in Baltimore City from 1999 to 2008")
+dev.off()
+```
+
+
+
