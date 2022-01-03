@@ -1,0 +1,34 @@
+---
+title: "Assignment 1 Mid1"
+author: "Abdullah Bilal"
+date: "1/11/2021"
+output: pdf_document
+---
+
+
+```{r}
+library(tidyverse)
+## -- Attaching packages --------------------------------------- tidyverse 
+##4.1.1--
+## v ggplot2 3.3.5 v purrr 0.3.4
+## v tibble 3.1.5 v dplyr 1.0.7
+## v tidyr 1.1.4 v stringr 1.4.0
+## v readr 2.0.2 v forcats 0.5.1
+## -- Conflicts ------------------------------------------
+##tidyverse_conflicts()
+## x dplyr::filter() masks stats::filter()
+##x dplyr::lag() masks stats::lag()
+ 
+ library(tesseract)
+ eng <- tesseract("eng")
+ text <- tesseract::ocr("D:/7th Smester/DATA SCIENCE/DS_Assigments/img1.PNG", engine = eng)
+ cat(text)
+
+
+```
+
+
+```{r}
+  #write.csv(text,file="D:/7th Smester/DATA SCIENCE/DS_Assigments/img1.csv")
+```
+
