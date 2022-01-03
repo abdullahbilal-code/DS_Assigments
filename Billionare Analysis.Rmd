@@ -1,0 +1,69 @@
+---
+title: "Billionaire Analysis"
+author: "17F8349 Abdullah Bilal"
+date: "12/31/2021"
+output: html_document
+---
+```{r}
+
+
+```
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(naniar)
+library(visdat)
+
+Billionaires <- read.csv("Billionaire.csv", header = TRUE, na.strings = c("NA","N/A",""))
+head(Billionaires)
+
+glimpse(Billionaires)
+
+sum(duplicated(Billionaires))
+
+Billionaires %>%
+  count(Name) %>%
+  filter (n > 1)
+sum(is.na(Billionaires))
+miss_var_summary(Billionaires)
+
+
+Billionaires %>%
+  arrange(NetWorth) %>%
+  vis_miss()
+```
+
+
+
+```{r cars}
+Billionaires_cleaned <- na.omit(Billionaires) %>%
+  distinct(Name, .keep_all = TRUE)
+
+sum(is.na(Billionaires_cleaned))
+
+Billionaires_cleaned %>%
+  count(Name) %>%
+  filter (n > 1)
+
+print(Billionaires$NetWorth)
+
+#geom_histogram(binwidth = 30, color = "red", fill = "white")
+
+Billionaires_cleaned %>%
+  ggplot(aes(x = NetWorth)) + geom_bar(color = "green", fill = "white")  + labs(title = "Net Worth")
+
+
+
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+NetWorthLabel = c("1 - 88.5", "88.6 - 177")
+Billionaires_cleaned$NetWorth_Group = cut(as.numeric(Billionaires_cleaned$NetWorth), breaks = c(1, 88.5, Inf), labels = NetWorthLabel, right = FALSE)
+ggplot(data = Billionaires_cleaned, mapping = aes(x = NetWorth_Group, y = Age)) + geom_boxplot(alpha = 0, color = "red", fill = "white") + geom_jitter(color = "purple", alpha = 0.5) + labs(title = "Forbes Billionaires 2021 by Age")
+```
+parameter was added to the code chunk to prevent printing of the R code that generated the plot.
