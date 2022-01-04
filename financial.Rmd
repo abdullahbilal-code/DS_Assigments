@@ -1,0 +1,43 @@
+---
+title: "financial"
+author: "17F8349 Abdullah Bilal"
+date: "16/19/2021"
+output: word_document
+---
+```{r}
+getwd()
+```
+
+```{r setup}
+financial=read.csv('D:/7th Smester/DATA SCIENCE/DS_Assigments/financial.csv')
+financial
+```
+
+
+
+```{r cars}
+
+drop_na=na.omit(financial)
+drop_na=head(drop_na)
+```
+
+
+
+```{r}
+barplot(drop_na$`Fund.allotted.in.â.¹crores.`,names.arg=drop_na$Department..Ministry)
+drop_na$`Fund.allotted.in.â.¹crores.`/sum(drop_na$`Fund.allotted.in.â.¹crores.`)*100
+
+```
+
+
+```{r}
+
+
+pie(drop_na$`Fund.allotted.in.â.¹crores.`/sum(drop_na$`Fund.allotted.in.â.¹crores.`)*100, 
+    labels = paste0(drop_na$`Fund.allotted.in.â.¹crores.`/sum(drop_na$`Fund.allotted.in.â.¹crores.`)*100, "%"))
+t2xy(seq.int(x[i], x[i + 1], length.out = n))
+
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

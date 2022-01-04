@@ -1,0 +1,43 @@
+---
+title: "Hotel Reviews Sentiment Analysis"
+author: "17F-8349"
+date: "12/26/2021"
+output: pdf_document
+---
+
+```{r}
+
+hotel_reviews <- read.csv("tripadvisor_hotel_reviews.csv")
+hotel_reviews <- hotel_reviews[1:5,]
+hotel_reviews
+custom_colors <- c("red", "royalblue4","powderblue","orangered","springgreen")
+pie(hotel_reviews$Rating, labels = rownames(hotel_reviews), col=custom_colors, main = "Hotel Reviews Ratings")
+#install.packages("plotrix")
+library("plotrix")
+draw.circle(0, 0, 0.4, col="white")
+if (!require("pacman")) 
+  install.packages("pacman")
+pacman::p_load(sentimentr, dplyr, magrittr)
+sentiment(hotel_reviews$ï..Review)
+temp <- hotel_reviews
+i<-1
+for(review in temp$ï..Review)
+{
+   temp$Sentiment[i] <- sentiment(review)$sentiment
+   if(temp$Sentiment[i] > 0)
+   {
+       temp$category[i] = "Positive"
+   }
+   else if(temp$Sentiment[i] < 0)
+   {
+       temp$category[i] = "Negative"
+   }
+   else if(temp$Sentiment[i] == 0)
+   {
+       temp$category[i] = "Neutral"
+   }
+   i<-i+1
+}
+temp
+
+```
